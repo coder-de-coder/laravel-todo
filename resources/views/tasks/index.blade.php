@@ -20,11 +20,18 @@
         @forelse ($tasks as $task)
             <li class="flex justify-between items-center p-4 bg-white rounded-lg shadow">
                 <div>
-                    <input type="checkbox" {{ $task->is_completed ? 'checked' : '' }} onclick="document.getElementById('update-task-{{ $task->id }}').submit();" />
+                    <!-- Form to toggle task completion -->
+                    <form id="update-task-{{ $task->id }}" action="{{ route('tasks.toggle', $task) }}" method="POST" style="display: inline;">
+                        @csrf
+                        @method('PUT')
+                        <input type="checkbox" {{ $task->is_completed ? 'checked' : '' }} onchange="this.form.submit();" />
+                    </form>
+                    <!-- Display task title with strike-through if completed -->
                     <span class="{{ $task->is_completed ? 'line-through text-gray-400' : '' }}">
                         {{ $task->title }}
                     </span>
                 </div>
+
                 <div class="flex space-x-2">
                     <a href="{{ route('tasks.edit', $task) }}" class="text-blue-500">Edit</a>
                     <form action="{{ route('tasks.destroy', $task) }}" method="POST">
